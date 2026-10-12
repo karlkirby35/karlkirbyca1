@@ -1,15 +1,56 @@
+
 services:
-  mysql:
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: app_user
+      DB_PASSWORD: ${DB_PASSWORD:-app_password}
+      DB_NAME: app_db
+      APP_SECRET: ${APP_SECRET:-local_development_secret_change_me}
+      API_URL: http://localhost:3000
+      CORS_ORIGIN: http://localhost:8080
+      STORAGE_DRIVER: local
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - uploads-data:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
     image: mysql:8.4
     environment:
-      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: app_db
       MYSQL_USER: app_user
-      MYSQL_PASSWORD: app_password
-    ports:
-      - "3306:3306"
+      MYSQL_PASSWORD: ${DB_PASSWORD:-app_password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
     volumes:
       - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3000
+    ports:
+      - "8080:80"
+    depends_on:
+      - app
 
 volumes:
   mysql-data:
+  uploads-data:
