@@ -105,7 +105,7 @@ export default function FilesPage() {
           variant={starredOnly ? "outline" : "secondary"}
           onClick={() => setStarredOnly(false)}
         >
-          All
+          Alll
         </Button>
         <Button
           variant={starredOnly ? "secondary" : "outline"}
