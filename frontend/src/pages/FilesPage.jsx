@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 
 export default function FilesPage() {
   const [files, setFiles] = useState([]);
+  const count = files.length;
   const [search, setSearch] = useState("");
   const [starredOnly, setStarredOnly] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -120,8 +121,13 @@ export default function FilesPage() {
 
       <div className="grid gap-4 md:grid-cols-[1fr_18rem]">
         <div>
+          <p className="mb-2 text-sm text-muted-foreground">
+            {files.length} {files.length === 1 ? "file" : "files"}
+          </p>
+
           {loading && <p>Loading...</p>}
           {error && <p className="text-destructive">{error}</p>}
+
           {!loading && !error && files.length === 0 && (
             <p className="py-12 text-center text-muted-foreground">
               {search || starredOnly
