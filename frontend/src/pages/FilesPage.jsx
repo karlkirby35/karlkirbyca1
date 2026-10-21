@@ -122,7 +122,7 @@ export default function FilesPage() {
       <div className="grid gap-4 md:grid-cols-[1fr_18rem]">
         <div>
           <p className="mb-2 text-sm text-muted-foreground">
-            {files.length} {files.length === 1 ? "file" : "files"}
+            {count} {count === 1 ? "file" : "files"}
           </p>
 
           {loading && <p>Loading...</p>}
