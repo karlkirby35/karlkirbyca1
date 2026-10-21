@@ -15,10 +15,14 @@
 
     aws ssm start-session --target i-09681537122f49f19 --region eu-west-1
 
-4: Log into ECR and pull image
+4.1 : Log into ECR  
 
     aws ecr get-login-password --region eu-west-1 \
   | sudo docker login --username AWS --password-stdin 974280729622.dkr.ecr.eu-west-1.amazonaws.com
+
+4.2: Pull image
+
+sudo docker pull 974280729622.dkr.ecr.eu-west-1.amazonaws.com/karlkirbyca1-frontend:latest
 
 5.1:  Stop and remove old container
 
