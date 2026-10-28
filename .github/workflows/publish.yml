@@ -30,15 +30,15 @@ jobs:
         id: ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build and push the image
+            - name: Build and push the image
         env:
           REGISTRY: ${{ steps.ecr.outputs.registry }}
           TAG: ${{ github.sha }}
         run: |
           docker build --target production \
-            -t "$REGISTRY/notes-app:latest" \
-            -t "$REGISTRY/notes-app:$TAG" .
-          docker push --all-tags "$REGISTRY/notes-app"
+            -t "$REGISTRY/karlkirbyca1:latest" \
+            -t "$REGISTRY/karlkirbyca1:$TAG" .
+          docker push --all-tags "$REGISTRY/karlkirbyca1"
 
   deploy:
     needs: publish
