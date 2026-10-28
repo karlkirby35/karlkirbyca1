@@ -27,8 +27,8 @@ set -euo pipefail
 
 REGION="eu-west-1"
 NAME="notes-app-containers"
-REPO_NAME="notes-app"
-PARAM_PATH="/notes-app"
+REPO_NAME="karlkirbyca1"
+PARAM_PATH="/karlkirbyca1"
 
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 BUCKET="${1:-notes-app-uploads-$ACCOUNT_ID}"
