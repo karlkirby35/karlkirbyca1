@@ -57,7 +57,16 @@ docker run -d \
 
 # Delete images that no container is using, so old versions don't fill the disk
 docker image prune -af
+# Replace the running backend container
+docker rm -f karlkirbyca1 || true
+docker run -d \
+  --name karlkirbyca1 \
+  --restart unless-stopped \
+  --network karlkirbyca1-network \
+  --env-file /etc/notes.env \
+  "$IMAGE"
 
+echo "Deployed $IMAGE"
 echo "Deployed $IMAGE"
 SCRIPT
 
