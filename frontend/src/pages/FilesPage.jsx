@@ -121,7 +121,7 @@ export default function FilesPage() {
 
       <div className="grid gap-4 md:grid-cols-[1fr_18rem]">
         <div>
-          <h1>Karl Kirby File</h1>
+          <h1>Your files</h1>
           {loading && <p>Loading...</p>}
           {error && <p className="text-destructive">{error}</p>}
           {!loading && !error && files.length === 0 && (
