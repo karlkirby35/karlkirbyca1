@@ -1,4 +1,4 @@
-FROM node:22-slim AS base
+FROM node:24-slim AS base
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ COPY backend/ ./
 
 CMD ["npm", "run", "dev"]
 
-FROM node:22-slim AS frontend
+FROM node:24-slim AS frontend
 
 WORKDIR /frontend
 COPY frontend/package.json frontend/package-lock.json ./
