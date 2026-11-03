@@ -45,6 +45,11 @@ aws ecr get-login-password --region "$REGION" \
   | docker login --username AWS --password-stdin "$REGISTRY"
 
 docker pull "$IMAGE"
+# Run database migrations before replacing the running application
+docker run --rm \
+  --network karlkirbyca1-network \
+  --env-file /etc/notes.env \
+  "$IMAGE" node db/migrate.js
 
 # Replace the running container with one from the new image
 docker rm -f notes || true
