@@ -2,20 +2,19 @@
 #!/usr/bin/env bash
 # Deploys a specific version of the application.
 # Usage: deploy-notes <tag>
-set -euo pipefail
 
+set -euo pipefail
 exec 2>&1
 
 TAG="${1:?Image tag is required}"
 REGION="eu-west-1"
-
 ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
 REGISTRY="$ACCOUNT.dkr.ecr.$REGION.amazonaws.com"
 IMAGE="$REGISTRY/karlkirbyca1:$TAG"
 
 echo "Deploying $IMAGE"
 
-# Retrieve application configuration from Parameter Store
+# Load application configuration
 aws ssm get-parameters-by-path \
   --region "$REGION" \
   --path /karlkirbyca1/ \
@@ -27,13 +26,13 @@ aws ssm get-parameters-by-path \
 
 chmod 600 /etc/notes.env
 
-# Authenticate with ECR and download the new image
+# Authenticate and download the image
 aws ecr get-login-password --region "$REGION" \
   | docker login --username AWS --password-stdin "$REGISTRY"
 
 docker pull "$IMAGE"
 
-# Run database migrations BEFORE replacing the existing application
+# Run database migrations before replacing the application
 docker run --rm \
   --network karlkirbyca1-network \
   --env-file /etc/notes.env \
@@ -41,16 +40,7 @@ docker run --rm \
 
 echo "Database migrations completed successfully"
 
-# Replace the application containers
-docker rm -f notes || true
-
-docker run -d \
-  --name notes \
-  --restart unless-stopped \
-  -p 80:8000 \
-  --env-file /etc/notes.env \
-  "$IMAGE"
-
+# Replace ONLY the backend container
 docker rm -f karlkirbyca1 || true
 
 docker run -d \
