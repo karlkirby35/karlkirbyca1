@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 # Deploys a specific application version with automatic rollback.
 # Usage: deploy-notes <tag>
@@ -12,24 +13,35 @@ NETWORK="karlkirbyca1-network"
 PREVIOUS="${APP}-previous"
 HEALTH_URL="http://127.0.0.1:8000/health"
 MAX_ATTEMPTS=30
+
 HAD_PREVIOUS=false
+OLD_CONTAINER_STOPPED=false
+NEW_CONTAINER_STARTED=false
 DEPLOYMENT_COMPLETE=false
 
 rollback() {
+  trap - ERR INT TERM
+  set +e
+
   if [ "$DEPLOYMENT_COMPLETE" = true ]; then
     return
   fi
 
   echo "Deployment failed. Restoring previous version..."
 
-  docker rm -f "$APP" 2>/dev/null || true
+  if [ "$NEW_CONTAINER_STARTED" = true ]; then
+    docker rm -f "$APP"
+  fi
 
   if [ "$HAD_PREVIOUS" = true ]; then
     docker rename "$PREVIOUS" "$APP"
     docker start "$APP"
     echo "Previous version restored."
+  elif [ "$OLD_CONTAINER_STOPPED" = true ]; then
+    docker start "$APP"
+    echo "Previous container restarted."
   else
-    echo "No previous version was available."
+    echo "Existing production container was left untouched."
   fi
 }
 
@@ -66,16 +78,20 @@ docker run --rm \
 
 echo "Database migrations completed."
 
-# Preserve the current container for rollback.
+# Ensure there is no leftover recovery container.
 if docker inspect "$PREVIOUS" >/dev/null 2>&1; then
   echo "A previous recovery container already exists. Stopping deployment safely."
   exit 1
 fi
 
+# Preserve the current container for rollback.
 if docker inspect "$APP" >/dev/null 2>&1; then
   docker stop "$APP"
+  OLD_CONTAINER_STOPPED=true
+
   docker rename "$APP" "$PREVIOUS"
   HAD_PREVIOUS=true
+  OLD_CONTAINER_STOPPED=false
 fi
 
 # Start the new version.
@@ -85,6 +101,8 @@ docker run -d \
   --network "$NETWORK" \
   --env-file /etc/notes.env \
   "$IMAGE"
+
+NEW_CONTAINER_STARTED=true
 
 # Check application and database health.
 HEALTHY=false
@@ -104,7 +122,6 @@ done
 if [ "$HEALTHY" != true ]; then
   echo "New version failed its health checks."
   rollback
-  trap - ERR INT TERM
   exit 1
 fi
 
