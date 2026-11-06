@@ -16,29 +16,26 @@ A file storage web app for storing files in the Cloud. Users can register, log i
 - Docker-based application setup
 - AWS deployment
 
-
-
 ## Screenshots
 
-### Login Page
+# Login Page
 
-![Dropbox Login Page](screenshots/login.png)
+![Dropbox Login Page](screenshots/loginpage.png)
 
-### Main Dashboard
+# Main Dashboard
 
-![Dropbox Main Dashboard](screenshots/dashboard.png)
+![Dropbox Main Dashboard](screenshots/filespage.png)
 
-### Starred Files
+# Starred Files
 
-![Dropbox Starred Files](screenshots/starred-files.png)
-
-
+![Dropbox Starred Files](screenshots/starredfiles.png)
 
 ## Deployment
 
 The dropbox application is deployed using Amazon Web Service (AWS)
 
 The deployment process uses:
+
 - Amazon EC2: Hosts the application.
 - Amazon ECR: Stores the Docker images.
 - Docker: Builds and runs the application containers.
@@ -46,7 +43,6 @@ The deployment process uses:
 - GitHub Actions: Automates the build and deployment process.
 
 The application is automatically deployed when changes are pushed to the main branch
-
 
 ## Continuous Integration
 
