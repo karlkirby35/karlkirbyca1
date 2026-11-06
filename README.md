@@ -18,15 +18,15 @@ A file storage web app for storing files in the Cloud. Users can register, log i
 
 ## Screenshots
 
-### Login Page
+# Login Page
 
 ![Dropbox Login Page](screenshots/loginpage.png)
 
-### Main Dashboard
+# Main Dashboard
 
 ![Dropbox Main Dashboard](screenshots/filespage.png)
 
-### Starred Files
+# Starred Files
 
 ![Dropbox Starred Files](screenshots/starredfiles.png)
 
