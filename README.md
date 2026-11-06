@@ -5,6 +5,62 @@ A file storage web app for storing files in the Cloud. Users can register, log i
 - `backend/` is an Express API. It stores data in MySQL, and files on local disk or in Amazon S3.
 - `frontend/` is a React app.
 
+## Features
+
+- User registration and login
+- Upload and download files
+- Rename and delete files
+- Star files for quick access
+- File storage using local storage or Amazon S3
+- MySQL database integration
+- Docker-based application setup
+- AWS deployment
+
+
+
+## Screenshots
+
+### Login Page
+
+![Dropbox Login Page](screenshots/login.png)
+
+### Main Dashboard
+
+![Dropbox Main Dashboard](screenshots/dashboard.png)
+
+### Starred Files
+
+![Dropbox Starred Files](screenshots/starred-files.png)
+
+
+
+## Deployment
+
+The dropbox application is deployed using Amazon Web Service (AWS)
+
+The deployment process uses:
+- Amazon EC2: Hosts the application.
+- Amazon ECR: Stores the Docker images.
+- Docker: Builds and runs the application containers.
+- AWS Systems Manager (SSM): Manages deployment configuration and environment variables.
+- GitHub Actions: Automates the build and deployment process.
+
+The application is automatically deployed when changes are pushed to the main branch
+
+
+## Continuous Integration
+
+Github Actions is used to automatically check the application whenever changes are pushed to the
+repository or when a new pull request is added.
+
+The checks workflow includes:
+
+Docker: Builds the production Docker image.
+Backend: Runs ESLint, Prettier checks and automated tests.
+Frontend: Runs ESLint, Prettier checks and builds the React application.
+
+These checks help identify errors and ensure the application is working correctly before changes are merged into the main branch.
+
 ## Run it locally
 
 You need Node 24 and Docker.
